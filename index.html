@@ -426,7 +426,6 @@
   </div>
 </div>
 
-<!-- Profile Popup -->
 <div class="profile-popup" id="profilePopup">
   <div class="profile-header">
     <img id="popupAvatar" src="https://i.imgur.com/W8uyrTY.jpeg" alt="">
@@ -444,7 +443,6 @@
   </div>
 </div>
 
-<!-- Logout blank page -->
 <div id="logout-page">
   <img src="https://i.postimg.cc/D0jMFMwx/Untitled1805-20260207024429.png" alt="Logged out">
 </div>
@@ -678,20 +676,20 @@ document.getElementById("logoutTrigger").onclick = () => {
 };
 
 // ──────────────────────────────────────────────
-// Settings modal close & save (reliable on mobile Safari)
+// Settings modal close & save
 // ──────────────────────────────────────────────
 
 const settingsModal = document.getElementById('settingsModal');
 
-document.getElementById("closeSettings").addEventListener('click', () => {
+document.getElementById("closeSettings").onclick = () => {
   settingsModal.classList.remove("active");
-});
+};
 
-document.getElementById("cancelSettings").addEventListener('click', () => {
+document.getElementById("cancelSettings").onclick = () => {
   settingsModal.classList.remove("active");
-});
+};
 
-document.getElementById("saveSettings").addEventListener('click', () => {
+document.getElementById("saveSettings").onclick = () => {
   userSettings.darkMode = document.getElementById("darkModeToggle").checked;
   userSettings.username = document.getElementById("userName").value.trim() || "You";
   const file = document.getElementById('settingsAvatarUpload').files[0];
@@ -712,22 +710,14 @@ document.getElementById("saveSettings").addEventListener('click', () => {
     updateProfileDisplay();
     settingsModal.classList.remove("active");
   }
-});
+};
 
-// Close on outside click/tap (most reliable fix for Settings not closing on mobile)
-settingsModal.addEventListener('click', (e) => {
+// Reliable outside close (tap/click gray area)
+settingsModal.onclick = (e) => {
   if (e.target === settingsModal) {
     settingsModal.classList.remove("active");
   }
-});
-
-// Also add touch support for outside close (Safari sometimes ignores click on overlays)
-settingsModal.addEventListener('touchend', (e) => {
-  if (e.target === settingsModal) {
-    e.preventDefault();
-    settingsModal.classList.remove("active");
-  }
-}, { passive: false });
+};
 
 // ──────────────────────────────────────────────
 // Compose modal
@@ -772,7 +762,7 @@ document.querySelectorAll('.avatar-select').forEach(img => {
 document.getElementById('sendBtn').onclick = () => {
   const name = document.getElementById('c-from-name').value.trim();
   const email = document.getElementById('c-from-email').value.trim();
-  const avatar = composeAvatarDataUrl || document.getElementById('c-avatar-url').value.trim() || '';
+  const avatar = composeAvatarDataUrl || '';
   const subject = document.getElementById('c-subject').value.trim() || '(no subject)';
   const body = document.getElementById('c-body').innerHTML.trim();
 
@@ -789,7 +779,6 @@ document.getElementById('sendBtn').onclick = () => {
 function resetCompose() {
   document.getElementById('c-from-name').value = '';
   document.getElementById('c-from-email').value = '';
-  document.getElementById('c-avatar-url').value = '';
   document.getElementById('c-subject').value = '';
   document.getElementById('c-body').innerHTML = '';
   composeAvatarDataUrl = null;
@@ -950,12 +939,6 @@ function renderInbox() {
   modal.onclick = e => {
     if (e.target === modal) modal.classList.remove('active');
   };
-  modal.addEventListener('touchend', e => {
-    if (e.target === modal) {
-      e.preventDefault();
-      modal.classList.remove('active');
-    }
-  }, { passive: false });
 });
 
 renderInbox();

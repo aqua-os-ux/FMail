@@ -465,7 +465,7 @@
   <div class="modal-content">
     <div class="modal-header">
       <h2>New message</h2>
-      <button id="closeCompose" style="background:none;border:none;font-size:28px;cursor:pointer;color:var(--text-light);">×</button>
+      <button id="closeCompose">×</button>
     </div>
     <div class="modal-body">
       <input id="c-from-name" placeholder="From name" type="text">
@@ -478,7 +478,7 @@
       </div>
 
       <div style="margin:16px 0;">
-        <button id="avatarPickerBtn" style="padding:8px 16px; background:#e8f0fe; border:none; border-radius:20px; cursor:pointer;">Quick avatars</button>
+        <button id="avatarPickerBtn">Quick avatars</button>
         <div id="avatarOptions" style="display:none; flex-wrap:wrap; gap:12px; margin-top:12px;">
           <img src="https://i.postimg.cc/rpfdP4ct/IMG-0675.png" class="avatar-select">
           <img src="https://i.postimg.cc/GpXB5Dr8/IMG-0676.jpg" class="avatar-select">
@@ -521,19 +521,14 @@
   </div>
 </div>
 
-<!-- View Modal -->
 <div class="modal" id="viewModal">
   <div class="modal-content">
     <div class="modal-header">
       <div style="display:flex; align-items:center; gap:16px;">
-        <button id="closeView" style="background:none;border:none;cursor:pointer;font-size:24px;color:var(--text-light);">
-          <span class="material-symbols-outlined">arrow_back</span>
-        </button>
+        <button id="closeView"><span class="material-symbols-outlined">arrow_back</span></button>
         <h2 id="view-subject"></h2>
       </div>
-      <button id="deleteBtn" style="background:none;border:none;cursor:pointer;">
-        <span class="material-symbols-outlined">delete</span>
-      </button>
+      <button id="deleteBtn"><span class="material-symbols-outlined">delete</span></button>
     </div>
     <div class="modal-body">
       <div id="senderClickable" style="display:flex; gap:16px; margin-bottom:24px; cursor:pointer;">
@@ -549,7 +544,7 @@
 
       <div class="reply-area">
         <div style="font-weight:500; margin-bottom:12px;">Reply</div>
-        <textarea id="reply-text" placeholder="Type your reply..." rows="5" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; resize:vertical; font-family:inherit;"></textarea>
+        <textarea id="reply-text" placeholder="Type your reply..." rows="5"></textarea>
         <div style="margin-top:16px; text-align:right;">
           <button class="btn-primary" id="sendReplyBtn">Send</button>
         </div>
@@ -558,12 +553,11 @@
   </div>
 </div>
 
-<!-- Reply as Sender Modal -->
 <div class="modal" id="replyAsSenderModal">
   <div class="modal-content" style="max-width:720px;">
     <div class="modal-header">
       <h2>Reply as sender</h2>
-      <button id="closeReplyAsSender" style="background:none;border:none;font-size:28px;cursor:pointer;color:var(--text-light);">×</button>
+      <button id="closeReplyAsSender">×</button>
     </div>
     <div class="modal-body">
       <div style="margin-bottom:16px; font-weight:500;">
@@ -578,12 +572,11 @@
   </div>
 </div>
 
-<!-- Settings Modal -->
 <div class="modal" id="settingsModal">
   <div class="modal-content" style="max-width: 600px;">
     <div class="modal-header">
       <h2>Settings</h2>
-      <button id="closeSettings" style="background:none;border:none;font-size:28px;cursor:pointer;color:var(--text-light);">×</button>
+      <button id="closeSettings">×</button>
     </div>
     <div style="padding:24px;">
       <div style="margin-bottom:24px;">
@@ -597,18 +590,18 @@
       </div>
       <div style="margin-bottom:24px;">
         <label for="userName" style="display:block; margin-bottom:8px;">Username</label>
-        <input id="userName" type="text" placeholder="Enter your username" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px;">
+        <input id="userName" type="text" placeholder="Enter your username">
       </div>
 
       <div style="margin-bottom:24px;">
         <label for="settingsAvatarUpload" style="display:block; margin-bottom:8px;">Profile picture</label>
-        <input type="file" id="settingsAvatarUpload" accept="image/*" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:8px;">
+        <input type="file" id="settingsAvatarUpload" accept="image/*">
         <p style="font-size:0.85rem; color:var(--text-light); margin-top:8px;">Upload from Photos/Files (optional)</p>
       </div>
 
       <div style="margin-bottom:32px;">
         <label for="userProfile" style="display:block; margin-bottom:8px;">Or paste image URL</label>
-        <input id="userProfile" type="text" placeholder="https://..." style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px;">
+        <input id="userProfile" type="text" placeholder="https://...">
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:16px;">
@@ -647,10 +640,10 @@ updateProfileDisplay();
 const profileBtn = document.getElementById("profileBtn");
 const profilePopup = document.getElementById("profilePopup");
 
-profileBtn.onclick = (e) => {
+profileBtn.addEventListener('click', (e) => {
   e.stopPropagation();
   profilePopup.classList.toggle("show");
-};
+});
 
 document.addEventListener("click", (e) => {
   if (!profilePopup.contains(e.target) && !profileBtn.contains(e.target)) {
@@ -658,37 +651,34 @@ document.addEventListener("click", (e) => {
   }
 });
 
-document.getElementById("settingsTrigger").onclick = () => {
+document.getElementById("settingsTrigger").addEventListener('click', () => {
   profilePopup.classList.remove("show");
   document.getElementById("darkModeToggle").checked = userSettings.darkMode;
   document.getElementById("userName").value = userSettings.username;
   document.getElementById("userProfile").value = userSettings.profile;
   document.getElementById("settingsModal").classList.add("active");
-};
+});
 
-document.getElementById("logoutTrigger").onclick = () => {
+document.getElementById("logoutTrigger").addEventListener('click', () => {
   profilePopup.classList.remove("show");
   document.querySelector(".topbar").style.display = "none";
   document.querySelector(".main").style.display = "none";
   document.querySelector(".fab").style.display = "none";
   document.getElementById("logout-page").style.display = "flex";
-};
+});
 
-// ──────────────────────────────────────────────
-  // Settings modal close & save
-// ──────────────────────────────────────────────
-
+// Settings modal close & save
 const settingsModal = document.getElementById('settingsModal');
 
-document.getElementById("closeSettings").onclick = () => {
+document.getElementById("closeSettings").addEventListener('click', () => {
   settingsModal.classList.remove("active");
-};
+});
 
-document.getElementById("cancelSettings").onclick = () => {
+document.getElementById("cancelSettings").addEventListener('click', () => {
   settingsModal.classList.remove("active");
-};
+});
 
-document.getElementById("saveSettings").onclick = () => {
+document.getElementById("saveSettings").addEventListener('click', () => {
   userSettings.darkMode = document.getElementById("darkModeToggle").checked;
   userSettings.username = document.getElementById("userName").value.trim() || "You";
   const file = document.getElementById('settingsAvatarUpload').files[0];
@@ -709,14 +699,11 @@ document.getElementById("saveSettings").onclick = () => {
     updateProfileDisplay();
     settingsModal.classList.remove("active");
   }
-};
+});
 
-// Outside close
-settingsModal.onclick = (e) => {
-  if (e.target === settingsModal) {
-    settingsModal.classList.remove("active");
-  }
-};
+settingsModal.addEventListener('click', (e) => {
+  if (e.target === settingsModal) settingsModal.classList.remove("active");
+});
 
 // ──────────────────────────────────────────────
 // Compose modal
@@ -728,39 +715,39 @@ document.getElementById('composeAvatarUpload').addEventListener('change', (e) =>
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = (event) => {
-      composeAvatarDataUrl = event.target.result;
-    };
+    reader.onload = (event) => composeAvatarDataUrl = event.target.result;
     reader.readAsDataURL(file);
   }
 });
 
-document.getElementById('composeBtn').onclick = () => {
+document.getElementById('composeBtn').addEventListener('click', () => {
   document.getElementById('composeModal').classList.add('active');
   composeAvatarDataUrl = null;
-};
+});
 
-document.getElementById('closeCompose').onclick = () => {
+document.getElementById('closeCompose').addEventListener('click', () => {
   document.getElementById('composeModal').classList.remove('active');
   resetCompose();
-};
+});
 
-document.getElementById('avatarPickerBtn').onclick = () => {
+document.getElementById('avatarPickerBtn').addEventListener('click', () => {
   const opts = document.getElementById('avatarOptions');
   opts.style.display = opts.style.display === 'flex' ? 'none' : 'flex';
-};
+});
 
 document.querySelectorAll('.avatar-select').forEach(img => {
-  img.onclick = () => {
+  img.addEventListener('click', () => {
     document.querySelectorAll('.avatar-select').forEach(i => i.classList.remove('selected'));
     img.classList.add('selected');
     composeAvatarDataUrl = img.src;
-  };
+  });
 });
 
-// Send button - reliable on iOS with touchend
-document.getElementById('sendBtn').addEventListener('touchend', (e) => {
-  e.preventDefault();
+// Reliable send on mobile (touchend + click fallback)
+const sendBtn = document.getElementById('sendBtn');
+
+function handleSend(e) {
+  if (e) e.preventDefault();
   const name = document.getElementById('c-from-name').value.trim();
   const email = document.getElementById('c-from-email').value.trim();
   const avatar = composeAvatarDataUrl || '';
@@ -775,7 +762,10 @@ document.getElementById('sendBtn').addEventListener('touchend', (e) => {
   resetCompose();
   document.getElementById('composeModal').classList.remove('active');
   renderInbox();
-}, { passive: false });
+}
+
+sendBtn.addEventListener('click', handleSend);
+sendBtn.addEventListener('touchend', handleSend, { passive: false });
 
 function resetCompose() {
   document.getElementById('c-from-name').value = '';
@@ -801,7 +791,7 @@ function openEmail(email) {
   document.getElementById('view-from').textContent = email.name || (email.email ? `${email.email}@gmail.com` : 'Unknown sender');
 
   renderEmailBody(email);
-  viewModal.classList.add('active');
+  document.getElementById('viewModal').classList.add('active');
 }
 
 function renderEmailBody(email) {
@@ -831,12 +821,12 @@ function renderEmailBody(email) {
   });
 }
 
-document.getElementById('closeView').onclick = () => {
-  viewModal.classList.remove('active');
+document.getElementById('closeView').addEventListener('click', () => {
+  document.getElementById('viewModal').classList.remove('active');
   currentEmail = null;
-};
+});
 
-document.getElementById('sendReplyBtn').onclick = () => {
+document.getElementById('sendReplyBtn').addEventListener('click', () => {
   if (!currentEmail) return;
   const text = document.getElementById('reply-text').value.trim();
   if (!text) return;
@@ -849,19 +839,19 @@ document.getElementById('sendReplyBtn').onclick = () => {
 
   document.getElementById('reply-text').value = '';
   renderEmailBody(currentEmail);
-};
+});
 
-document.getElementById('deleteBtn').onclick = () => {
+document.getElementById('deleteBtn').addEventListener('click', () => {
   if (!currentEmail) return;
 
   currentEmail.category = 'Deleted';
 
-  viewModal.classList.remove('active');
+  document.getElementById('viewModal').classList.remove('active');
   currentEmail = null;
   renderInbox();
-};
+});
 
-document.getElementById('senderClickable').onclick = () => {
+document.getElementById('senderClickable').addEventListener('click', () => {
   if (!currentEmail) return;
 
   document.getElementById('replyAsSenderTo').textContent = 
@@ -869,12 +859,17 @@ document.getElementById('senderClickable').onclick = () => {
 
   document.getElementById('replyAsSenderBody').innerHTML = '';
   document.getElementById('replyAsSenderModal').classList.add('active');
-};
+});
 
-document.getElementById('closeReplyAsSender').onclick = () => document.getElementById('replyAsSenderModal').classList.remove('active');
-document.getElementById('cancelReplyAsSender').onclick = () => document.getElementById('replyAsSenderModal').classList.remove('active');
+document.getElementById('closeReplyAsSender').addEventListener('click', () => {
+  document.getElementById('replyAsSenderModal').classList.remove('active');
+});
 
-document.getElementById('sendAsSenderBtn').onclick = () => {
+document.getElementById('cancelReplyAsSender').addEventListener('click', () => {
+  document.getElementById('replyAsSenderModal').classList.remove('active');
+});
+
+document.getElementById('sendAsSenderBtn').addEventListener('click', () => {
   if (!currentEmail) return;
 
   const text = document.getElementById('replyAsSenderBody').innerHTML.trim();
@@ -888,28 +883,32 @@ document.getElementById('sendAsSenderBtn').onclick = () => {
 
   document.getElementById('replyAsSenderModal').classList.remove('active');
   renderEmailBody(currentEmail);
-};
+});
 
 // ──────────────────────────────────────────────
-  // Sidebar categories (menu button)
+// Sidebar & Inbox
 // ──────────────────────────────────────────────
 
-document.getElementById('menuBtn').onclick = () => {
+let emails = [];
+let currentFilter = 'Inbox';
+
+document.getElementById('menuBtn').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('open');
-};
+});
 
 document.querySelectorAll('.sidebar-item').forEach(item => {
-  item.onclick = () => {
+  item.addEventListener('click', () => {
     document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
     item.classList.add('active');
     currentFilter = item.dataset.filter;
     renderInbox();
     if (window.innerWidth < 1024) document.getElementById('sidebar').classList.remove('open');
-  };
+  });
 });
 
 function renderInbox() {
-  inboxContainer.innerHTML = '';
+  const container = document.getElementById('inbox-container');
+  container.innerHTML = '';
 
   const filtered = emails.filter(e => e.category === currentFilter);
 
@@ -930,16 +929,16 @@ function renderInbox() {
         <div class="snippet">${(email.body.replace(/<[^>]+>/g, '') || '').substring(0, 100)}${email.body.length > 100 ? '...' : ''}</div>
       </div>
     `;
-    div.onclick = () => openEmail(email);
-    inboxContainer.appendChild(div);
+    div.addEventListener('click', () => openEmail(email));
+    container.appendChild(div);
   });
 }
 
-// Close modals on outside click/tap
-[composeModal, viewModal, settingsModal, document.getElementById('replyAsSenderModal')].forEach(modal => {
-  modal.onclick = e => {
+// Close modals on outside tap/click
+[document.getElementById('composeModal'), document.getElementById('viewModal'), settingsModal, document.getElementById('replyAsSenderModal')].forEach(modal => {
+  modal.addEventListener('click', e => {
     if (e.target === modal) modal.classList.remove('active');
-  };
+  });
 });
 
 renderInbox();

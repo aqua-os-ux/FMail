@@ -461,7 +461,6 @@
 
 <button class="fab" id="composeBtn">+</button>
 
-<!-- Compose Modal -->
 <div class="modal" id="composeModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -676,7 +675,7 @@ document.getElementById("logoutTrigger").onclick = () => {
 };
 
 // ──────────────────────────────────────────────
-// Settings modal close & save
+  // Settings modal close & save
 // ──────────────────────────────────────────────
 
 const settingsModal = document.getElementById('settingsModal');
@@ -712,7 +711,7 @@ document.getElementById("saveSettings").onclick = () => {
   }
 };
 
-// Reliable outside close (tap/click gray area)
+// Outside close
 settingsModal.onclick = (e) => {
   if (e.target === settingsModal) {
     settingsModal.classList.remove("active");
@@ -759,7 +758,9 @@ document.querySelectorAll('.avatar-select').forEach(img => {
   };
 });
 
-document.getElementById('sendBtn').onclick = () => {
+// Send button - reliable on iOS with touchend
+document.getElementById('sendBtn').addEventListener('touchend', (e) => {
+  e.preventDefault();
   const name = document.getElementById('c-from-name').value.trim();
   const email = document.getElementById('c-from-email').value.trim();
   const avatar = composeAvatarDataUrl || '';
@@ -774,7 +775,7 @@ document.getElementById('sendBtn').onclick = () => {
   resetCompose();
   document.getElementById('composeModal').classList.remove('active');
   renderInbox();
-};
+}, { passive: false });
 
 function resetCompose() {
   document.getElementById('c-from-name').value = '';
@@ -890,7 +891,7 @@ document.getElementById('sendAsSenderBtn').onclick = () => {
 };
 
 // ──────────────────────────────────────────────
-// Sidebar categories (menu button)
+  // Sidebar categories (menu button)
 // ──────────────────────────────────────────────
 
 document.getElementById('menuBtn').onclick = () => {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,937 +11,214 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
 
-  <style>
-    :root {
-      --primary: #1a73e8;
-      --surface: #ffffff;
-      --bg: #f0f2f5;
-      --text: #202124;
-      --text-light: #5f6368;
-      --border: #dadce0;
-      --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.08);
-      --warning-bg: #fff3cd;
-      --warning-border: #ffeeba;
-      --warning-text: #856404;
-    }
-
-    body.dark-mode {
-      --primary: #8ab4f8;
-      --surface: #202124;
-      --bg: #171717;
-      --text: #e8eaed;
-      --text-light: #9aa0a6;
-      --border: #5f6368;
-      --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.2);
-      --warning-bg: #442f00;
-      --warning-border: #5c4200;
-      --warning-text: #ffd166;
-    }
-
-    * { margin:0; padding:0; box-sizing:border-box; }
-
-    body {
-      font-family: 'Roboto', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .topbar {
-      height: 64px;
-      background: var(--surface);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      box-shadow: var(--shadow);
-    }
-
-    .logo { height: 40px; }
-
-    .right-side { display: flex; align-items: center; gap: 16px; }
-
-    .profile-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 20px;
-      transition: background 0.2s;
-    }
-
-    .profile-btn:hover { background: rgba(0,0,0,0.05); }
-    body.dark-mode .profile-btn:hover { background: rgba(255,255,255,0.08); }
-
-    .profile-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-
-    .profile-name {
-      font-weight: 500;
-      font-size: 0.95rem;
-      max-width: 140px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .fab {
-      position: fixed;
-      bottom: 24px; right: 24px;
-      width: 56px; height: 56px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      font-size: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      cursor: pointer;
-      z-index: 15;
-      transition: all 0.25s ease;
-    }
-
-    .fab:hover { transform: scale(1.12); }
-
-    .main { flex: 1; display: flex; overflow: hidden; }
-
-    .sidebar {
-      width: 0;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      overflow-y: auto;
-      transition: width 0.35s cubic-bezier(0.4,0,0.2,1);
-      z-index: 10;
-    }
-
-    .sidebar.open { width: 280px; }
-    @media (min-width: 1024px) { .sidebar { width: 280px; } }
-
-    .sidebar-item {
-      padding: 12px 24px 12px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: var(--text-light);
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .sidebar-item:hover, .sidebar-item.active { background: #e8f0fe; color: var(--primary); }
-    body.dark-mode .sidebar-item:hover, body.dark-mode .sidebar-item.active { background: #303134; }
-
-    .inbox { flex: 1; overflow-y: auto; padding: 12px 16px; }
-
-    .email {
-      background: var(--surface);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-      display: flex;
-      gap: 16px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: var(--shadow);
-    }
-
-    .email:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
-
-    .avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-
-    .email-info { flex: 1; overflow: hidden; }
-    .from { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .subject { font-weight: 500; margin: 3px 0 5px; }
-    .snippet { color: var(--text-light); font-size: 0.92rem; line-height: 1.4; }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 16px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal.active { display: flex; opacity: 1; }
-
-    .modal-content {
-      background: var(--surface);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 860px;
-      max-height: 94vh;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.28);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transform: scale(0.94);
-      transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
-    }
-
-    .modal-header {
-      padding: 12px 20px;
-      background: #f8f9fa;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    body.dark-mode .modal-header { background: #303134; }
-
-    .modal-body { flex: 1; overflow-y: auto; padding: 24px; }
-
-    input[type="text"], .editor, input[type="file"] {
-      width: 100%;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-      background: var(--surface);
-      color: var(--text);
-    }
-
-    input:focus, .editor:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(26,115,232,0.15);
-      outline: none;
-    }
-
-    .editor { min-height: 180px; outline: none; }
-
-    button, .btn-primary, .btn-secondary {
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 10px 28px;
-      border-radius: 24px;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-
-    .btn-primary:hover { background: #1557b0; transform: translateY(-1px); }
-
-    body.dark-mode .btn-primary:hover { background: #6b9bf4; }
-
-    .avatar-select {
-      width: 60px; height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      cursor: pointer;
-      border: 3px solid transparent;
-      transition: all 0.2s ease;
-    }
-
-    .avatar-select.selected {
-      border-color: var(--primary);
-      transform: scale(1.08);
-    }
-
-    .reply-area {
-      margin-top: 32px;
-      padding: 20px;
-      background: #f8f9fa;
-      border-radius: 12px;
-      border-top: 1px solid var(--border);
-    }
-
-    body.dark-mode .reply-area { background: #303134; }
-
-    .reply-message {
-      background: #e8f0fe;
-      padding: 12px 16px;
-      border-radius: 12px;
-      margin: 16px 0;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    body.dark-mode .reply-message { background: #3c4043; }
-
-    .reply-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
-
-    .reply-from { font-weight: 500; font-size: 0.98rem; margin-bottom: 4px; }
-
-    .warning {
-      background: var(--warning-bg);
-      border: 1px solid var(--warning-border);
-      color: var(--warning-text);
-      padding: 16px;
-      border-radius: 8px;
-      margin: 24px 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .warning-icon { font-size: 32px; }
-
-    .profile-popup {
-      position: absolute;
-      top: 68px;
-      right: 16px;
-      background: var(--surface);
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-      width: 320px;
-      overflow: hidden;
-      z-index: 25;
-      transform: scale(0.95);
-      opacity: 0;
-      transition: all 0.18s ease;
-      pointer-events: none;
-    }
-
-    .profile-popup.show {
-      transform: scale(1);
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .profile-header {
-      padding: 24px 20px 16px;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .profile-header img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; }
-
-    .profile-header .name { font-size: 1.25rem; font-weight: 500; }
-
-    .profile-menu { padding: 8px 0; }
-
-    .menu-item {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 12px 24px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .menu-item:hover { background: #f1f3f4; }
-    body.dark-mode .menu-item:hover { background: #303134; }
-
-    .menu-item span { font-size: 24px; color: var(--text-light); }
-
-    #logout-page {
-      display: none;
-      height: 100vh;
-      background: white;
-      align-items: flex-start;
-      justify-content: center;
-      padding-top: 40px;
-    }
-
-    #logout-page img {
-      width: 80%;
-      max-width: 420px;
-      height: auto;
-    }
-
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 48px;
-      height: 24px;
-    }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 24px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 20px;
-      width: 20px;
-      left: 2px;
-      bottom: 2px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    input:checked + .slider { background-color: var(--primary); }
-
-    input:checked + .slider:before { transform: translateX(24px); }
-
-    @media (max-width: 600px) {
-      .profile-popup { right: 8px; width: calc(100% - 16px); }
-      .fab { bottom: 16px; right: 16px; }
-      #logout-page img { width: 90%; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="topbar">
-  <div style="display:flex; align-items:center; gap:16px;">
-    <img src="https://i.imgur.com/adubOrk.png" alt="Gmail" class="logo">
-    <button id="menuBtn"><span class="material-symbols-outlined" style="font-size:28px;">menu</span></button>
-  </div>
-
-  <div class="right-side">
-    <button class="profile-btn" id="profileBtn">
-      <img id="topbarAvatar" class="profile-avatar" src="https://i.imgur.com/W8uyrTY.jpeg" alt="">
-      <span id="topbarName" class="profile-name">You</span>
-    </button>
-  </div>
-</div>
-
-<div class="profile-popup" id="profilePopup">
-  <div class="profile-header">
-    <img id="popupAvatar" src="https://i.imgur.com/W8uyrTY.jpeg" alt="">
-    <div id="popupName" class="name">You</div>
-  </div>
-  <div class="profile-menu">
-    <div class="menu-item" id="settingsTrigger">
-      <span class="material-symbols-outlined">settings</span>
-      <span>Settings</span>
+  <div class="topbar">
+    <div style="display:flex; align-items:center; gap:16px;">
+      <img src="https://i.postimg.cc/kGzJVzRC/adub-Ork.png" alt="Gmail" class="logo">
+      <button id="menuBtn"><span class="material-symbols-outlined" style="font-size:28px;">menu</span></button>
     </div>
-    <div class="menu-item" id="logoutTrigger">
-      <span class="material-symbols-outlined">logout</span>
-      <span>Log out</span>
+
+    <div class="right-side">
+      <button class="profile-btn" id="profileBtn">
+        <img id="topbarAvatar" class="profile-avatar" src="https://i.imgur.com/W8uyrTY.jpeg" alt="">
+        <span id="topbarName" class="profile-name">You</span>
+      </button>
     </div>
   </div>
-</div>
 
-<div id="logout-page">
-  <img src="https://i.postimg.cc/D0jMFMwx/Untitled1805-20260207024429.png" alt="Logged out">
-</div>
-
-<div class="main" id="mainContent">
-  <nav class="sidebar" id="sidebar">
-    <div class="sidebar-item active" data-filter="Inbox">Inbox <span id="count-inbox">0</span></div>
-    <div class="sidebar-item" data-filter="Warning">Warnings <span id="count-warning">0</span></div>
-    <div class="sidebar-item" data-filter="Sent">Sent <span id="count-sent">0</span></div>
-    <div class="sidebar-item" data-filter="Spam">Spam <span id="count-spam">0</span></div>
-    <div class="sidebar-item" data-filter="Deleted">Trash <span id="count-deleted">0</span></div>
-  </nav>
-
-  <main class="inbox" id="inbox-container"></main>
-</div>
-
-<button class="fab" id="composeBtn">+</button>
-
-<div class="modal" id="composeModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>New message</h2>
-      <button id="closeCompose">×</button>
+  <div class="profile-popup" id="profilePopup">
+    <div class="profile-header">
+      <img id="popupAvatar" src="https://i.postimg.cc/W4Nv4TYF/W8uyr-TY.jpg" alt="">
+      <div id="popupName" class="name">You</div>
     </div>
-    <div class="modal-body">
-      <input id="c-from-name" placeholder="From name" type="text">
-      <input id="c-from-email" placeholder="handle@gmail.com" type="text">
-
-      <div style="margin:16px 0;">
-        <label style="display:block; margin-bottom:8px;">Sender avatar (optional)</label>
-        <input type="file" id="composeAvatarUpload" accept="image/*">
-        <p style="font-size:0.85rem; color:var(--text-light); margin-top:8px;">Choose from Photos/Files</p>
+    <div class="profile-menu">
+      <div class="menu-item" id="settingsTrigger">
+        <span class="material-symbols-outlined">settings</span>
+        <span>Settings</span>
       </div>
+      <div class="menu-item" id="logoutTrigger">
+        <span class="material-symbols-outlined">logout</span>
+        <span>Log out</span>
+      </div>
+    </div>
+  </div>
 
-      <div style="margin:16px 0;">
-        <button id="avatarPickerBtn">Quick avatars</button>
-        <div id="avatarOptions" style="display:none; flex-wrap:wrap; gap:12px; margin-top:12px;">
-          <img src="https://i.postimg.cc/rpfdP4ct/IMG-0675.png" class="avatar-select">
-          <img src="https://i.postimg.cc/GpXB5Dr8/IMG-0676.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/bY9rvMsm/IMG-0677.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/FFVzKq7W/IMG-0678.png" class="avatar-select">
-          <img src="https://i.postimg.cc/jq42j9L8/IMG-0679.png" class="avatar-select">
-          <img src="https://i.postimg.cc/DfP0zD8N/IMG-0680.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/bY9rvMsB/IMG-0681.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/CLM1nNqs/IMG-0682.png" class="avatar-select">
-          <img src="https://i.postimg.cc/L64XgT1B/IMG-0683.png" class="avatar-select">
-          <img src="https://i.postimg.cc/L64XgT1T/IMG-0684.png" class="avatar-select">
-          <img src="https://i.postimg.cc/hP4jQrd2/IMG-0685.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/RVCFJRHX/IMG-0686.png" class="avatar-select">
-          <img src="https://i.postimg.cc/656340vH/IMG-0687.png" class="avatar-select">
-          <img src="https://i.postimg.cc/sDfXGch6/IMG-0688.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/gkcJLDZt/IMG-0689.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/VLs60RCH/IMG-0690.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/vH8BxzVk/IMG-0691.png" class="avatar-select">
-          <img src="https://i.postimg.cc/4N4dH59j/IMG-0692.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/zXDBHjg9/IMG-0693.png" class="avatar-select">
-          <img src="https://i.postimg.cc/vH8BxzVJ/IMG-0694.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/7YP6JVzv/IMG-0695.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/J47nHqXC/IMG-0696.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/gkcJLDhP/IMG-0697.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/X7NJB85b/IMG-0698.png" class="avatar-select">
-          <img src="https://i.postimg.cc/FsFRkZSm/IMG-0699.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/gkcJLDZ7/IMG-0700.png" class="avatar-select">
-          <img src="https://i.postimg.cc/hhRQqhnZ/IMG-0720.jpg" class="avatar-select">
-          <img src="https://i.postimg.cc/WzkqKgBx/Untitled1806-20260207142859.png" class="avatar-select">
+  <div id="logout-page">
+    <img src="https://i.postimg.cc/D0jMFMwx/Untitled1805-20260207024429.png" alt="Logged out">
+  </div>
+
+  <div class="main" id="mainContent">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-item active" data-filter="Inbox">Inbox <span id="count-inbox">0</span></div>
+      <div class="sidebar-item" data-filter="Warning">Warnings <span id="count-warning">0</span></div>
+      <div class="sidebar-item" data-filter="Sent">Sent <span id="count-sent">0</span></div>
+      <div class="sidebar-item" data-filter="Spam">Spam <span id="count-spam">0</span></div>
+      <div class="sidebar-item" data-filter="Deleted">Trash <span id="count-deleted">0</span></div>
+    </nav>
+
+    <main class="inbox" id="inbox-container"></main>
+  </div>
+
+  <button class="fab" id="composeBtn">+</button>
+
+  <div class="modal" id="composeModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>New message</h2>
+        <button id="closeCompose">×</button>
+      </div>
+      <div class="modal-body">
+        <input id="c-from-name" placeholder="From name" type="text">
+        <input id="c-from-email" placeholder="handle@gmail.com" type="text">
+
+        <div style="margin:16px 0;">
+          <label style="display:block; margin-bottom:8px;">Sender avatar (optional)</label>
+          <input type="file" id="composeAvatarUpload" accept="image/*">
+          <p style="font-size:0.85rem; color:var(--text-light); margin-top:8px;">Choose from Photos/Files</p>
         </div>
-      </div>
 
-      <input id="c-subject" placeholder="Subject" type="text">
-      <div id="c-body" class="editor" contenteditable="true"></div>
-
-      <div style="margin-top:28px; text-align:right;">
-        <button class="btn-primary" id="sendBtn">Send</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="viewModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <div style="display:flex; align-items:center; gap:16px;">
-        <button id="closeView"><span class="material-symbols-outlined">arrow_back</span></button>
-        <h2 id="view-subject"></h2>
-      </div>
-      <button id="deleteBtn"><span class="material-symbols-outlined">delete</span></button>
-    </div>
-    <div class="modal-body">
-      <div id="senderClickable" style="display:flex; gap:16px; margin-bottom:24px; cursor:pointer;">
-        <img id="view-avatar" class="avatar" src="" alt="" style="width:52px; height:52px;">
-        <div>
-          <div id="view-from" style="font-weight:500; font-size:1.1rem;"></div>
-          <div style="color:var(--text-light); font-size:0.92rem;">to me</div>
+        <div style="margin:16px 0;">
+          <button id="avatarPickerBtn">Quick avatars</button>
+          <div id="avatarOptions" style="display:none; flex-wrap:wrap; gap:12px; margin-top:12px;">
+            <img src="https://i.postimg.cc/rpfdP4ct/IMG-0675.png" class="avatar-select">
+            <img src="https://i.postimg.cc/GpXB5Dr8/IMG-0676.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/bY9rvMsm/IMG-0677.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/FFVzKq7W/IMG-0678.png" class="avatar-select">
+            <img src="https://i.postimg.cc/jq42j9L8/IMG-0679.png" class="avatar-select">
+            <img src="https://i.postimg.cc/DfP0zD8N/IMG-0680.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/bY9rvMsB/IMG-0681.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/CLM1nNqs/IMG-0682.png" class="avatar-select">
+            <img src="https://i.postimg.cc/L64XgT1B/IMG-0683.png" class="avatar-select">
+            <img src="https://i.postimg.cc/L64XgT1T/IMG-0684.png" class="avatar-select">
+            <img src="https://i.postimg.cc/hP4jQrd2/IMG-0685.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/RVCFJRHX/IMG-0686.png" class="avatar-select">
+            <img src="https://i.postimg.cc/656340vH/IMG-0687.png" class="avatar-select">
+            <img src="https://i.postimg.cc/sDfXGch6/IMG-0688.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/gkcJLDZt/IMG-0689.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/VLs60RCH/IMG-0690.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/vH8BxzVk/IMG-0691.png" class="avatar-select">
+            <img src="https://i.postimg.cc/4N4dH59j/IMG-0692.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/zXDBHjg9/IMG-0693.png" class="avatar-select">
+            <img src="https://i.postimg.cc/vH8BxzVJ/IMG-0694.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/7YP6JVzv/IMG-0695.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/J47nHqXC/IMG-0696.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/gkcJLDhP/IMG-0697.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/X7NJB85b/IMG-0698.png" class="avatar-select">
+            <img src="https://i.postimg.cc/FsFRkZSm/IMG-0699.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/gkcJLDZ7/IMG-0700.png" class="avatar-select">
+            <img src="https://i.postimg.cc/hhRQqhnZ/IMG-0720.jpg" class="avatar-select">
+            <img src="https://i.postimg.cc/WzkqKgBx/Untitled1806-20260207142859.png" class="avatar-select">
+          </div>
         </div>
-      </div>
 
-      <div id="view-body" style="line-height:1.6;"></div>
-      <div id="view-warning"></div>
+        <input id="c-subject" placeholder="Subject" type="text">
+        <div id="c-body" class="editor" contenteditable="true"></div>
 
-      <div class="reply-area">
-        <div style="font-weight:500; margin-bottom:12px;">Reply</div>
-        <textarea id="reply-text" placeholder="Type your reply..." rows="5"></textarea>
-        <div style="margin-top:16px; text-align:right;">
-          <button class="btn-primary" id="sendReplyBtn">Send</button>
+        <div style="margin-top:28px; text-align:right;">
+          <button class="btn-primary" id="sendBtn">Send</button>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="modal" id="replyAsSenderModal">
-  <div class="modal-content" style="max-width:720px;">
-    <div class="modal-header">
-      <h2>Reply as sender</h2>
-      <button id="closeReplyAsSender">×</button>
-    </div>
-    <div class="modal-body">
-      <div style="margin-bottom:16px; font-weight:500;">
-        Replying to: <span id="replyAsSenderTo"></span>
+  <div class="modal" id="viewModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <button id="closeView"><span class="material-symbols-outlined">arrow_back</span></button>
+          <h2 id="view-subject"></h2>
+        </div>
+        <button id="deleteBtn"><span class="material-symbols-outlined">delete</span></button>
       </div>
-      <div id="replyAsSenderBody" class="editor" contenteditable="true" style="min-height:160px; border:1px solid var(--border); border-radius:8px; padding:16px;"></div>
-      <div style="margin-top:24px; text-align:right; display:flex; justify-content:flex-end; gap:12px;">
-        <button class="btn-secondary" id="cancelReplyAsSender">Cancel</button>
-        <button class="btn-primary" id="sendAsSenderBtn">Send message</button>
+      <div class="modal-body">
+        <div id="senderClickable" style="display:flex; gap:16px; margin-bottom:24px; cursor:pointer;">
+          <img id="view-avatar" class="avatar" src="" alt="" style="width:52px; height:52px;">
+          <div>
+            <div id="view-from" style="font-weight:500; font-size:1.1rem;"></div>
+            <div style="color:var(--text-light); font-size:0.92rem;">to me</div>
+          </div>
+        </div>
+
+        <div id="view-body" style="line-height:1.6;"></div>
+        <div id="view-warning"></div>
+
+        <div class="reply-area">
+          <div style="font-weight:500; margin-bottom:12px;">Reply</div>
+          <textarea id="reply-text" placeholder="Type your reply..." rows="5"></textarea>
+          <div style="margin-top:16px; text-align:right;">
+            <button class="btn-primary" id="sendReplyBtn">Send</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="modal" id="settingsModal">
-  <div class="modal-content" style="max-width: 600px;">
-    <div class="modal-header">
-      <h2>Settings</h2>
-      <button id="closeSettings">×</button>
+  <div class="modal" id="replyAsSenderModal">
+    <div class="modal-content" style="max-width:720px;">
+      <div class="modal-header">
+        <h2>Reply as sender</h2>
+        <button id="closeReplyAsSender">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom:16px; font-weight:500;">
+          Replying to: <span id="replyAsSenderTo"></span>
+        </div>
+        <div id="replyAsSenderBody" class="editor" contenteditable="true"
+          style="min-height:160px; border:1px solid var(--border); border-radius:8px; padding:16px;"></div>
+        <div style="margin-top:24px; text-align:right; display:flex; justify-content:flex-end; gap:12px;">
+          <button class="btn-secondary" id="cancelReplyAsSender">Cancel</button>
+          <button class="btn-primary" id="sendAsSenderBtn">Send message</button>
+        </div>
+      </div>
     </div>
-    <div style="padding:24px;">
-      <div style="margin-bottom:24px;">
-        <label style="display:flex; justify-content:space-between; align-items:center; font-size:1rem; cursor:pointer;">
-          Dark mode
-          <label class="toggle-switch">
-            <input type="checkbox" id="darkModeToggle">
-            <span class="slider"></span>
+  </div>
+
+  <div class="modal" id="settingsModal">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button id="closeSettings">×</button>
+      </div>
+      <div style="padding:24px;">
+        <div style="margin-bottom:24px;">
+          <label
+            style="display:flex; justify-content:space-between; align-items:center; font-size:1rem; cursor:pointer;">
+            Dark mode
+            <label class="toggle-switch">
+              <input type="checkbox" id="darkModeToggle">
+              <span class="slider"></span>
+            </label>
           </label>
-        </label>
-      </div>
-      <div style="margin-bottom:24px;">
-        <label for="userName" style="display:block; margin-bottom:8px;">Username</label>
-        <input id="userName" type="text" placeholder="Enter your username">
-      </div>
+        </div>
+        <div style="margin-bottom:24px;">
+          <label for="userName" style="display:block; margin-bottom:8px;">Username</label>
+          <input id="userName" type="text" placeholder="Enter your username">
+        </div>
 
-      <div style="margin-bottom:24px;">
-        <label for="settingsAvatarUpload" style="display:block; margin-bottom:8px;">Profile picture</label>
-        <input type="file" id="settingsAvatarUpload" accept="image/*">
-        <p style="font-size:0.85rem; color:var(--text-light); margin-top:8px;">Upload from Photos/Files (optional)</p>
-      </div>
+        <div style="margin-bottom:24px;">
+          <label for="settingsAvatarUpload" style="display:block; margin-bottom:8px;">Profile picture</label>
+          <input type="file" id="settingsAvatarUpload" accept="image/*">
+          <p style="font-size:0.85rem; color:var(--text-light); margin-top:8px;">Upload from Photos/Files (optional)</p>
+        </div>
 
-      <div style="margin-bottom:32px;">
-        <label for="userProfile" style="display:block; margin-bottom:8px;">Or paste image URL</label>
-        <input id="userProfile" type="text" placeholder="https://...">
-      </div>
+        <div style="margin-bottom:32px;">
+          <label for="userProfile" style="display:block; margin-bottom:8px;">Or paste image URL</label>
+          <input id="userProfile" type="text" placeholder="https://...">
+        </div>
 
-      <div style="display:flex; justify-content:flex-end; gap:16px;">
-        <button class="btn-secondary" id="cancelSettings">Cancel</button>
-        <button class="btn-primary" id="saveSettings">Save changes</button>
+        <div style="display:flex; justify-content:flex-end; gap:16px;">
+          <button class="btn-secondary" id="cancelSettings">Cancel</button>
+          <button class="btn-primary" id="saveSettings">Save changes</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-// ──────────────────────────────────────────────
-// Settings & Profile
-// ──────────────────────────────────────────────
-
-let userSettings = {
-  username: "You",
-  profile: "https://i.imgur.com/W8uyrTY.jpeg",
-  darkMode: false
-};
-
-if (localStorage.getItem("fakeGmailSettings")) {
-  userSettings = JSON.parse(localStorage.getItem("fakeGmailSettings"));
-  document.body.classList.toggle("dark-mode", userSettings.darkMode);
-}
-
-function updateProfileDisplay() {
-  document.getElementById("topbarName").textContent = userSettings.username;
-  document.getElementById("topbarAvatar").src = userSettings.profile;
-  document.getElementById("popupName").textContent = userSettings.username;
-  document.getElementById("popupAvatar").src = userSettings.profile;
-}
-
-updateProfileDisplay();
-
-const profileBtn = document.getElementById("profileBtn");
-const profilePopup = document.getElementById("profilePopup");
-
-profileBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  profilePopup.classList.toggle("show");
-});
-
-document.addEventListener("click", (e) => {
-  if (!profilePopup.contains(e.target) && !profileBtn.contains(e.target)) {
-    profilePopup.classList.remove("show");
-  }
-});
-
-document.getElementById("settingsTrigger").addEventListener('click', () => {
-  profilePopup.classList.remove("show");
-  document.getElementById("darkModeToggle").checked = userSettings.darkMode;
-  document.getElementById("userName").value = userSettings.username;
-  document.getElementById("userProfile").value = userSettings.profile;
-  document.getElementById("settingsModal").classList.add("active");
-});
-
-document.getElementById("logoutTrigger").addEventListener('click', () => {
-  profilePopup.classList.remove("show");
-  document.querySelector(".topbar").style.display = "none";
-  document.querySelector(".main").style.display = "none";
-  document.querySelector(".fab").style.display = "none";
-  document.getElementById("logout-page").style.display = "flex";
-});
-
-// Settings modal close & save
-const settingsModal = document.getElementById('settingsModal');
-
-document.getElementById("closeSettings").addEventListener('click', () => {
-  settingsModal.classList.remove("active");
-});
-
-document.getElementById("cancelSettings").addEventListener('click', () => {
-  settingsModal.classList.remove("active");
-});
-
-document.getElementById("saveSettings").addEventListener('click', () => {
-  userSettings.darkMode = document.getElementById("darkModeToggle").checked;
-  userSettings.username = document.getElementById("userName").value.trim() || "You";
-  const file = document.getElementById('settingsAvatarUpload').files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      userSettings.profile = e.target.result;
-      localStorage.setItem("fakeGmailSettings", JSON.stringify(userSettings));
-      document.body.classList.toggle("dark-mode", userSettings.darkMode);
-      updateProfileDisplay();
-      settingsModal.classList.remove("active");
-    };
-    reader.readAsDataURL(file);
-  } else {
-    userSettings.profile = document.getElementById("userProfile").value.trim() || "https://i.imgur.com/W8uyrTY.jpeg";
-    localStorage.setItem("fakeGmailSettings", JSON.stringify(userSettings));
-    document.body.classList.toggle("dark-mode", userSettings.darkMode);
-    updateProfileDisplay();
-    settingsModal.classList.remove("active");
-  }
-});
-
-settingsModal.addEventListener('click', (e) => {
-  if (e.target === settingsModal) settingsModal.classList.remove("active");
-});
-
-// ──────────────────────────────────────────────
-// Compose modal
-// ──────────────────────────────────────────────
-
-let composeAvatarDataUrl = null;
-
-document.getElementById('composeAvatarUpload').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (event) => composeAvatarDataUrl = event.target.result;
-    reader.readAsDataURL(file);
-  }
-});
-
-document.getElementById('composeBtn').addEventListener('click', () => {
-  document.getElementById('composeModal').classList.add('active');
-  composeAvatarDataUrl = null;
-});
-
-document.getElementById('closeCompose').addEventListener('click', () => {
-  document.getElementById('composeModal').classList.remove('active');
-  resetCompose();
-});
-
-document.getElementById('avatarPickerBtn').addEventListener('click', () => {
-  const opts = document.getElementById('avatarOptions');
-  opts.style.display = opts.style.display === 'flex' ? 'none' : 'flex';
-});
-
-document.querySelectorAll('.avatar-select').forEach(img => {
-  img.addEventListener('click', () => {
-    document.querySelectorAll('.avatar-select').forEach(i => i.classList.remove('selected'));
-    img.classList.add('selected');
-    composeAvatarDataUrl = img.src;
-  });
-});
-
-// Reliable send on mobile (touchend + click fallback)
-const sendBtn = document.getElementById('sendBtn');
-
-function handleSend(e) {
-  if (e) e.preventDefault();
-  const name = document.getElementById('c-from-name').value.trim();
-  const email = document.getElementById('c-from-email').value.trim();
-  const avatar = composeAvatarDataUrl || '';
-  const subject = document.getElementById('c-subject').value.trim() || '(no subject)';
-  const body = document.getElementById('c-body').innerHTML.trim();
-
-  let category = 'Inbox';
-  if (!name && !email && !avatar && !body) category = 'Warning';
-
-  emails.unshift({ name, email, avatar, subject, body, category, replies: [] });
-
-  resetCompose();
-  document.getElementById('composeModal').classList.remove('active');
-  renderInbox();
-}
-
-sendBtn.addEventListener('click', handleSend);
-sendBtn.addEventListener('touchend', handleSend, { passive: false });
-
-function resetCompose() {
-  document.getElementById('c-from-name').value = '';
-  document.getElementById('c-from-email').value = '';
-  document.getElementById('c-subject').value = '';
-  document.getElementById('c-body').innerHTML = '';
-  composeAvatarDataUrl = null;
-  document.getElementById('composeAvatarUpload').value = '';
-  document.querySelectorAll('.avatar-select').forEach(i => i.classList.remove('selected'));
-  document.getElementById('avatarOptions').style.display = 'none';
-}
-
-// ──────────────────────────────────────────────
-// View modal, reply, delete, sender reply
-// ──────────────────────────────────────────────
-
-let currentEmail = null;
-
-function openEmail(email) {
-  currentEmail = email;
-  document.getElementById('view-subject').textContent = email.subject;
-  document.getElementById('view-avatar').src = email.avatar || 'https://i.imgur.com/W8uyrTY.jpeg';
-  document.getElementById('view-from').textContent = email.name || (email.email ? `${email.email}@gmail.com` : 'Unknown sender');
-
-  renderEmailBody(email);
-  document.getElementById('viewModal').classList.add('active');
-}
-
-function renderEmailBody(email) {
-  const bodyEl = document.getElementById('view-body');
-  bodyEl.innerHTML = email.body;
-
-  let warning = '';
-  if (!email.name && !email.email && !email.avatar) {
-    warning = `<div class="warning">
-      <span class="material-symbols-outlined warning-icon">warning</span>
-      <div><strong>Warning:</strong> No sender information available.<br>Replying is not recommended.</div>
-    </div>`;
-  }
-  document.getElementById('view-warning').innerHTML = warning;
-
-  email.replies.forEach(reply => {
-    const div = document.createElement('div');
-    div.className = 'reply-message';
-    div.innerHTML = `
-      <img class="reply-avatar" src="${reply.profile}" alt="">
-      <div class="reply-content">
-        <div class="reply-from">${reply.from}:</div>
-        <div>${reply.text}</div>
-      </div>
-    `;
-    bodyEl.appendChild(div);
-  });
-}
-
-document.getElementById('closeView').addEventListener('click', () => {
-  document.getElementById('viewModal').classList.remove('active');
-  currentEmail = null;
-});
-
-document.getElementById('sendReplyBtn').addEventListener('click', () => {
-  if (!currentEmail) return;
-  const text = document.getElementById('reply-text').value.trim();
-  if (!text) return;
-
-  currentEmail.replies.push({
-    from: userSettings.username,
-    profile: userSettings.profile,
-    text
-  });
-
-  document.getElementById('reply-text').value = '';
-  renderEmailBody(currentEmail);
-});
-
-document.getElementById('deleteBtn').addEventListener('click', () => {
-  if (!currentEmail) return;
-
-  currentEmail.category = 'Deleted';
-
-  document.getElementById('viewModal').classList.remove('active');
-  currentEmail = null;
-  renderInbox();
-});
-
-document.getElementById('senderClickable').addEventListener('click', () => {
-  if (!currentEmail) return;
-
-  document.getElementById('replyAsSenderTo').textContent = 
-    currentEmail.name || (currentEmail.email ? `${currentEmail.email}@gmail.com` : 'Unknown sender');
-
-  document.getElementById('replyAsSenderBody').innerHTML = '';
-  document.getElementById('replyAsSenderModal').classList.add('active');
-});
-
-document.getElementById('closeReplyAsSender').addEventListener('click', () => {
-  document.getElementById('replyAsSenderModal').classList.remove('active');
-});
-
-document.getElementById('cancelReplyAsSender').addEventListener('click', () => {
-  document.getElementById('replyAsSenderModal').classList.remove('active');
-});
-
-document.getElementById('sendAsSenderBtn').addEventListener('click', () => {
-  if (!currentEmail) return;
-
-  const text = document.getElementById('replyAsSenderBody').innerHTML.trim();
-  if (!text) return;
-
-  currentEmail.replies.push({
-    from: currentEmail.name || (currentEmail.email ? currentEmail.email : 'Sender'),
-    profile: currentEmail.avatar || 'https://i.imgur.com/W8uyrTY.jpeg',
-    text
-  });
-
-  document.getElementById('replyAsSenderModal').classList.remove('active');
-  renderEmailBody(currentEmail);
-});
-
-// ──────────────────────────────────────────────
-// Sidebar & Inbox
-// ──────────────────────────────────────────────
-
-let emails = [];
-let currentFilter = 'Inbox';
-
-document.getElementById('menuBtn').addEventListener('click', () => {
-  document.getElementById('sidebar').classList.toggle('open');
-});
-
-document.querySelectorAll('.sidebar-item').forEach(item => {
-  item.addEventListener('click', () => {
-    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-    item.classList.add('active');
-    currentFilter = item.dataset.filter;
-    renderInbox();
-    if (window.innerWidth < 1024) document.getElementById('sidebar').classList.remove('open');
-  });
-});
-
-function renderInbox() {
-  const container = document.getElementById('inbox-container');
-  container.innerHTML = '';
-
-  const filtered = emails.filter(e => e.category === currentFilter);
-
-  document.getElementById('count-inbox').textContent   = emails.filter(e => e.category === 'Inbox').length;
-  document.getElementById('count-warning').textContent = emails.filter(e => e.category === 'Warning').length;
-  document.getElementById('count-sent').textContent    = emails.filter(e => e.category === 'Sent').length;
-  document.getElementById('count-spam').textContent    = emails.filter(e => e.category === 'Spam').length;
-  document.getElementById('count-deleted').textContent = emails.filter(e => e.category === 'Deleted').length;
-
-  filtered.forEach(email => {
-    const div = document.createElement('div');
-    div.className = 'email';
-    div.innerHTML = `
-      <img class="avatar" src="${email.avatar || 'https://i.imgur.com/W8uyrTY.jpeg'}" alt="">
-      <div class="email-info">
-        <div class="from">${email.name || (email.email ? `${email.email}@gmail.com` : 'Unknown sender')}</div>
-        <div class="subject">${email.subject}</div>
-        <div class="snippet">${(email.body.replace(/<[^>]+>/g, '') || '').substring(0, 100)}${email.body.length > 100 ? '...' : ''}</div>
-      </div>
-    `;
-    div.addEventListener('click', () => openEmail(email));
-    container.appendChild(div);
-  });
-}
-
-// Close modals on outside tap/click
-[document.getElementById('composeModal'), document.getElementById('viewModal'), settingsModal, document.getElementById('replyAsSenderModal')].forEach(modal => {
-  modal.addEventListener('click', e => {
-    if (e.target === modal) modal.classList.remove('active');
-  });
-});
-
-renderInbox();
-</script>
+  <script src="script.js"></script>
 </body>
+
+</html>

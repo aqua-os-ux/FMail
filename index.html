@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fake Gmail - Prank</title>
 
-  <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/DySm2dJj/Untitled1804-20260208023119.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/MGxQDKWW/Untitled1804-20260207020835.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
@@ -414,7 +414,7 @@
 
 <div class="topbar">
   <div style="display:flex; align-items:center; gap:16px;">
-    <img src="https://i.imgur.com/adubOrk.png" alt="Gmail" class="logo">
+    <img id="gmailLogo" src="https://i.postimg.cc/vB1HQGDv/Untitled1804-20260208025324.png" alt="Gmail" class="logo">
     <button id="menuBtn"><span class="material-symbols-outlined" style="font-size:28px;">menu</span></button>
   </div>
 
@@ -544,7 +544,7 @@
 
       <div class="reply-area">
         <div style="font-weight:500; margin-bottom:12px;">Reply</div>
-        <textarea id="reply-text" placeholder="Type your reply..." rows="5"></textarea>
+        <textarea id="reply-text" placeholder="Type your reply..." rows="5" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; resize:vertical; font-family:inherit;"></textarea>
         <div style="margin-top:16px; text-align:right;">
           <button class="btn-primary" id="sendReplyBtn">Send</button>
         </div>
@@ -590,18 +590,18 @@
       </div>
       <div style="margin-bottom:24px;">
         <label for="userName" style="display:block; margin-bottom:8px;">Username</label>
-        <input id="userName" type="text" placeholder="Enter your username">
+        <input id="userName" type="text" placeholder="Enter your username" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px;">
       </div>
 
       <div style="margin-bottom:24px;">
         <label for="settingsAvatarUpload" style="display:block; margin-bottom:8px;">Profile picture</label>
-        <input type="file" id="settingsAvatarUpload" accept="image/*">
+        <input type="file" id="settingsAvatarUpload" accept="image/*" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:8px;">
         <p style="font-size:0.85rem; color:var(--text-light); margin-top:8px;">Upload from Photos/Files (optional)</p>
       </div>
 
       <div style="margin-bottom:32px;">
         <label for="userProfile" style="display:block; margin-bottom:8px;">Or paste image URL</label>
-        <input id="userProfile" type="text" placeholder="https://...">
+        <input id="userProfile" type="text" placeholder="https://..." style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px;">
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:16px;">
@@ -637,13 +637,29 @@ function updateProfileDisplay() {
 
 updateProfileDisplay();
 
+// Dynamic Gmail logo based on theme
+function updateGmailLogo() {
+  const logo = document.getElementById("gmailLogo");
+  if (document.body.classList.contains("dark-mode")) {
+    logo.src = "https://i.postimg.cc/25yCwCQK/Untitled1804-20260208025446.png";
+  } else {
+    logo.src = "https://i.postimg.cc/vB1HQGDv/Untitled1804-20260208025324.png";
+  }
+}
+
+updateGmailLogo();
+
+// Update logo when theme changes
+const observer = new MutationObserver(updateGmailLogo);
+observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+
 const profileBtn = document.getElementById("profileBtn");
 const profilePopup = document.getElementById("profilePopup");
 
-profileBtn.addEventListener('click', (e) => {
+profileBtn.onclick = (e) => {
   e.stopPropagation();
   profilePopup.classList.toggle("show");
-});
+};
 
 document.addEventListener("click", (e) => {
   if (!profilePopup.contains(e.target) && !profileBtn.contains(e.target)) {
@@ -651,34 +667,37 @@ document.addEventListener("click", (e) => {
   }
 });
 
-document.getElementById("settingsTrigger").addEventListener('click', () => {
+document.getElementById("settingsTrigger").onclick = () => {
   profilePopup.classList.remove("show");
   document.getElementById("darkModeToggle").checked = userSettings.darkMode;
   document.getElementById("userName").value = userSettings.username;
   document.getElementById("userProfile").value = userSettings.profile;
   document.getElementById("settingsModal").classList.add("active");
-});
+};
 
-document.getElementById("logoutTrigger").addEventListener('click', () => {
+document.getElementById("logoutTrigger").onclick = () => {
   profilePopup.classList.remove("show");
   document.querySelector(".topbar").style.display = "none";
   document.querySelector(".main").style.display = "none";
   document.querySelector(".fab").style.display = "none";
   document.getElementById("logout-page").style.display = "flex";
-});
+};
 
+// ──────────────────────────────────────────────
 // Settings modal close & save
+// ──────────────────────────────────────────────
+
 const settingsModal = document.getElementById('settingsModal');
 
-document.getElementById("closeSettings").addEventListener('click', () => {
+document.getElementById("closeSettings").onclick = () => {
   settingsModal.classList.remove("active");
-});
+};
 
-document.getElementById("cancelSettings").addEventListener('click', () => {
+document.getElementById("cancelSettings").onclick = () => {
   settingsModal.classList.remove("active");
-});
+};
 
-document.getElementById("saveSettings").addEventListener('click', () => {
+document.getElementById("saveSettings").onclick = () => {
   userSettings.darkMode = document.getElementById("darkModeToggle").checked;
   userSettings.username = document.getElementById("userName").value.trim() || "You";
   const file = document.getElementById('settingsAvatarUpload').files[0];
@@ -689,6 +708,7 @@ document.getElementById("saveSettings").addEventListener('click', () => {
       localStorage.setItem("fakeGmailSettings", JSON.stringify(userSettings));
       document.body.classList.toggle("dark-mode", userSettings.darkMode);
       updateProfileDisplay();
+      updateGmailLogo();
       settingsModal.classList.remove("active");
     };
     reader.readAsDataURL(file);
@@ -697,13 +717,16 @@ document.getElementById("saveSettings").addEventListener('click', () => {
     localStorage.setItem("fakeGmailSettings", JSON.stringify(userSettings));
     document.body.classList.toggle("dark-mode", userSettings.darkMode);
     updateProfileDisplay();
+    updateGmailLogo();
     settingsModal.classList.remove("active");
   }
-});
+};
 
-settingsModal.addEventListener('click', (e) => {
-  if (e.target === settingsModal) settingsModal.classList.remove("active");
-});
+settingsModal.onclick = (e) => {
+  if (e.target === settingsModal) {
+    settingsModal.classList.remove("active");
+  }
+};
 
 // ──────────────────────────────────────────────
 // Compose modal
@@ -715,39 +738,37 @@ document.getElementById('composeAvatarUpload').addEventListener('change', (e) =>
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = (event) => composeAvatarDataUrl = event.target.result;
+    reader.onload = (event) => {
+      composeAvatarDataUrl = event.target.result;
+    };
     reader.readAsDataURL(file);
   }
 });
 
-document.getElementById('composeBtn').addEventListener('click', () => {
+document.getElementById('composeBtn').onclick = () => {
   document.getElementById('composeModal').classList.add('active');
   composeAvatarDataUrl = null;
-});
+};
 
-document.getElementById('closeCompose').addEventListener('click', () => {
+document.getElementById('closeCompose').onclick = () => {
   document.getElementById('composeModal').classList.remove('active');
   resetCompose();
-});
+};
 
-document.getElementById('avatarPickerBtn').addEventListener('click', () => {
+document.getElementById('avatarPickerBtn').onclick = () => {
   const opts = document.getElementById('avatarOptions');
   opts.style.display = opts.style.display === 'flex' ? 'none' : 'flex';
-});
+};
 
 document.querySelectorAll('.avatar-select').forEach(img => {
-  img.addEventListener('click', () => {
+  img.onclick = () => {
     document.querySelectorAll('.avatar-select').forEach(i => i.classList.remove('selected'));
     img.classList.add('selected');
     composeAvatarDataUrl = img.src;
-  });
+  };
 });
 
-// Reliable send on mobile (touchend + click fallback)
-const sendBtn = document.getElementById('sendBtn');
-
-function handleSend(e) {
-  if (e) e.preventDefault();
+document.getElementById('sendBtn').onclick = () => {
   const name = document.getElementById('c-from-name').value.trim();
   const email = document.getElementById('c-from-email').value.trim();
   const avatar = composeAvatarDataUrl || '';
@@ -762,10 +783,7 @@ function handleSend(e) {
   resetCompose();
   document.getElementById('composeModal').classList.remove('active');
   renderInbox();
-}
-
-sendBtn.addEventListener('click', handleSend);
-sendBtn.addEventListener('touchend', handleSend, { passive: false });
+};
 
 function resetCompose() {
   document.getElementById('c-from-name').value = '';
@@ -821,12 +839,12 @@ function renderEmailBody(email) {
   });
 }
 
-document.getElementById('closeView').addEventListener('click', () => {
+document.getElementById('closeView').onclick = () => {
   document.getElementById('viewModal').classList.remove('active');
   currentEmail = null;
-});
+};
 
-document.getElementById('sendReplyBtn').addEventListener('click', () => {
+document.getElementById('sendReplyBtn').onclick = () => {
   if (!currentEmail) return;
   const text = document.getElementById('reply-text').value.trim();
   if (!text) return;
@@ -839,9 +857,9 @@ document.getElementById('sendReplyBtn').addEventListener('click', () => {
 
   document.getElementById('reply-text').value = '';
   renderEmailBody(currentEmail);
-});
+};
 
-document.getElementById('deleteBtn').addEventListener('click', () => {
+document.getElementById('deleteBtn').onclick = () => {
   if (!currentEmail) return;
 
   currentEmail.category = 'Deleted';
@@ -849,9 +867,9 @@ document.getElementById('deleteBtn').addEventListener('click', () => {
   document.getElementById('viewModal').classList.remove('active');
   currentEmail = null;
   renderInbox();
-});
+};
 
-document.getElementById('senderClickable').addEventListener('click', () => {
+document.getElementById('senderClickable').onclick = () => {
   if (!currentEmail) return;
 
   document.getElementById('replyAsSenderTo').textContent = 
@@ -859,17 +877,12 @@ document.getElementById('senderClickable').addEventListener('click', () => {
 
   document.getElementById('replyAsSenderBody').innerHTML = '';
   document.getElementById('replyAsSenderModal').classList.add('active');
-});
+};
 
-document.getElementById('closeReplyAsSender').addEventListener('click', () => {
-  document.getElementById('replyAsSenderModal').classList.remove('active');
-});
+document.getElementById('closeReplyAsSender').onclick = () => document.getElementById('replyAsSenderModal').classList.remove('active');
+document.getElementById('cancelReplyAsSender').onclick = () => document.getElementById('replyAsSenderModal').classList.remove('active');
 
-document.getElementById('cancelReplyAsSender').addEventListener('click', () => {
-  document.getElementById('replyAsSenderModal').classList.remove('active');
-});
-
-document.getElementById('sendAsSenderBtn').addEventListener('click', () => {
+document.getElementById('sendAsSenderBtn').onclick = () => {
   if (!currentEmail) return;
 
   const text = document.getElementById('replyAsSenderBody').innerHTML.trim();
@@ -883,27 +896,24 @@ document.getElementById('sendAsSenderBtn').addEventListener('click', () => {
 
   document.getElementById('replyAsSenderModal').classList.remove('active');
   renderEmailBody(currentEmail);
-});
+};
 
 // ──────────────────────────────────────────────
-// Sidebar & Inbox
+// Sidebar categories (menu button)
 // ──────────────────────────────────────────────
 
-let emails = [];
-let currentFilter = 'Inbox';
-
-document.getElementById('menuBtn').addEventListener('click', () => {
+document.getElementById('menuBtn').onclick = () => {
   document.getElementById('sidebar').classList.toggle('open');
-});
+};
 
 document.querySelectorAll('.sidebar-item').forEach(item => {
-  item.addEventListener('click', () => {
+  item.onclick = () => {
     document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
     item.classList.add('active');
     currentFilter = item.dataset.filter;
     renderInbox();
     if (window.innerWidth < 1024) document.getElementById('sidebar').classList.remove('open');
-  });
+  };
 });
 
 function renderInbox() {
@@ -929,18 +939,19 @@ function renderInbox() {
         <div class="snippet">${(email.body.replace(/<[^>]+>/g, '') || '').substring(0, 100)}${email.body.length > 100 ? '...' : ''}</div>
       </div>
     `;
-    div.addEventListener('click', () => openEmail(email));
+    div.onclick = () => openEmail(email);
     container.appendChild(div);
   });
 }
 
-// Close modals on outside tap/click
+// Close modals on outside click/tap
 [document.getElementById('composeModal'), document.getElementById('viewModal'), settingsModal, document.getElementById('replyAsSenderModal')].forEach(modal => {
-  modal.addEventListener('click', e => {
+  modal.onclick = e => {
     if (e.target === modal) modal.classList.remove('active');
-  });
+  };
 });
 
 renderInbox();
 </script>
 </body>
+</html>

@@ -414,7 +414,8 @@
 
 <div class="topbar">
   <div style="display:flex; align-items:center; gap:16px;">
-    <img src="https://i.imgur.com/adubOrk.png" alt="Gmail" class="logo">
+    <img src="https://i.postimg.cc/vB1HQGDv/Untitled1804-20260208025324.png" alt="Gmail" class="logo logo-light">
+    <img src="https://i.postimg.cc/25yCwCQK/Untitled1804-20260208025446.png" alt="Gmail" class="logo logo-dark">
     <button id="menuBtn"><span class="material-symbols-outlined" style="font-size:28px;">menu</span></button>
   </div>
 
@@ -640,10 +641,10 @@ updateProfileDisplay();
 const profileBtn = document.getElementById("profileBtn");
 const profilePopup = document.getElementById("profilePopup");
 
-profileBtn.addEventListener('click', (e) => {
+profileBtn.onclick = (e) => {
   e.stopPropagation();
   profilePopup.classList.toggle("show");
-});
+};
 
 document.addEventListener("click", (e) => {
   if (!profilePopup.contains(e.target) && !profileBtn.contains(e.target)) {
@@ -651,34 +652,37 @@ document.addEventListener("click", (e) => {
   }
 });
 
-document.getElementById("settingsTrigger").addEventListener('click', () => {
+document.getElementById("settingsTrigger").onclick = () => {
   profilePopup.classList.remove("show");
   document.getElementById("darkModeToggle").checked = userSettings.darkMode;
   document.getElementById("userName").value = userSettings.username;
   document.getElementById("userProfile").value = userSettings.profile;
   document.getElementById("settingsModal").classList.add("active");
-});
+};
 
-document.getElementById("logoutTrigger").addEventListener('click', () => {
+document.getElementById("logoutTrigger").onclick = () => {
   profilePopup.classList.remove("show");
   document.querySelector(".topbar").style.display = "none";
   document.querySelector(".main").style.display = "none";
   document.querySelector(".fab").style.display = "none";
   document.getElementById("logout-page").style.display = "flex";
-});
+};
 
+// ──────────────────────────────────────────────
 // Settings modal close & save
+// ──────────────────────────────────────────────
+
 const settingsModal = document.getElementById('settingsModal');
 
-document.getElementById("closeSettings").addEventListener('click', () => {
+document.getElementById("closeSettings").onclick = () => {
   settingsModal.classList.remove("active");
-});
+};
 
-document.getElementById("cancelSettings").addEventListener('click', () => {
+document.getElementById("cancelSettings").onclick = () => {
   settingsModal.classList.remove("active");
-});
+};
 
-document.getElementById("saveSettings").addEventListener('click', () => {
+document.getElementById("saveSettings").onclick = () => {
   userSettings.darkMode = document.getElementById("darkModeToggle").checked;
   userSettings.username = document.getElementById("userName").value.trim() || "You";
   const file = document.getElementById('settingsAvatarUpload').files[0];
@@ -699,11 +703,11 @@ document.getElementById("saveSettings").addEventListener('click', () => {
     updateProfileDisplay();
     settingsModal.classList.remove("active");
   }
-});
+};
 
-settingsModal.addEventListener('click', (e) => {
+settingsModal.onclick = (e) => {
   if (e.target === settingsModal) settingsModal.classList.remove("active");
-});
+};
 
 // ──────────────────────────────────────────────
 // Compose modal
@@ -715,7 +719,9 @@ document.getElementById('composeAvatarUpload').addEventListener('change', (e) =>
   const file = e.target.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = (event) => composeAvatarDataUrl = event.target.result;
+    reader.onload = (event) => {
+      composeAvatarDataUrl = event.target.result;
+    };
     reader.readAsDataURL(file);
   }
 });
@@ -743,11 +749,7 @@ document.querySelectorAll('.avatar-select').forEach(img => {
   });
 });
 
-// Reliable send on mobile (touchend + click fallback)
-const sendBtn = document.getElementById('sendBtn');
-
-function handleSend(e) {
-  if (e) e.preventDefault();
+document.getElementById('sendBtn').addEventListener('click', () => {
   const name = document.getElementById('c-from-name').value.trim();
   const email = document.getElementById('c-from-email').value.trim();
   const avatar = composeAvatarDataUrl || '';
@@ -762,10 +764,7 @@ function handleSend(e) {
   resetCompose();
   document.getElementById('composeModal').classList.remove('active');
   renderInbox();
-}
-
-sendBtn.addEventListener('click', handleSend);
-sendBtn.addEventListener('touchend', handleSend, { passive: false });
+});
 
 function resetCompose() {
   document.getElementById('c-from-name').value = '';
@@ -944,3 +943,4 @@ function renderInbox() {
 renderInbox();
 </script>
 </body>
+</html>
